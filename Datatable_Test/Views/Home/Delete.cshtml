@@ -1,0 +1,22 @@
+﻿@model Datatable_Test.Models.Departamento
+
+<h2>Delete Empleado</h2>
+@using (Html.BeginForm("delete", "home", FormMethod.Post, new { id = "#popupForm" }))
+{
+    @Html.HiddenFor(a=>a.Num_Empleado)
+    <div class="form-group">
+        <label>Num_Empleado</label>
+        <p>@Model.Num_Empleado</p>
+    </div>
+    <div class="form-group">
+        <label>Nombre</label>
+        <p>@Model.Nombre</p>
+    </div>
+    <div class="form-group">
+        <label>Fecha_Creacion</label>
+        <p>@Model.Fecha_Creacion</p>
+    </div>
+    <div>
+        <input type="submit" value="Delete" />
+    </div>
+}
