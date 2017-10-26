@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Datatable_Test.Models;
+using System.Globalization;
 
 namespace Datatable_Test.Controllers
 {
@@ -20,7 +21,16 @@ namespace Datatable_Test.Controllers
             using (Empresa2Entities Obj_Connection = new Empresa2Entities())
             {
                 var empleados = Obj_Connection.Departamentoes.OrderBy(a => a.Num_Empleado).ToList();
-                return Json(new { data = empleados}, JsonRequestBehavior.AllowGet);
+                List<Empleado> parseables = new List<Empleado>();
+                for (int i = 0; i < empleados.Count() - 1; i++)
+                {
+                    parseables.Add(new Empleado());
+                    parseables[i].Num_Empleado = empleados[i].Num_Empleado;
+                    parseables[i].Nombre = empleados[i].Nombre;
+                    parseables[i].Fecha_Creacion = empleados[i].Fecha_Creacion.ToString("yyyy/MM/dd HH:mm");
+                    
+                }
+                return Json(new { data = parseables }, JsonRequestBehavior.AllowGet);
             }
         }
 
@@ -39,7 +49,7 @@ namespace Datatable_Test.Controllers
         [HttpPost]
         public ActionResult Save(Departamento empleado)
         {
-            bool status = false;
+            //bool status = false;
             if (ModelState.IsValid)
             {
                 using (Empresa2Entities Obj_Connection = new Empresa2Entities())
@@ -51,19 +61,19 @@ namespace Datatable_Test.Controllers
                         if (v != null)
                         {
                             v.Nombre = empleado.Nombre;
-                            v.Fecha_Creacion = empleado.Fecha_Creacion;
                         }
                     }
                     else
                     {
                         //Save
+                        empleado.Fecha_Creacion = DateTime.Now;
                         Obj_Connection.Departamentoes.Add(empleado);
                     }
                     Obj_Connection.SaveChanges();
-                    status = true;
+                    //status = true;
                 }
             }
-            return new JsonResult { Data = new { status = status } };
+            return View("Main");
         }
 
         [HttpGet]
@@ -98,7 +108,7 @@ namespace Datatable_Test.Controllers
                     status = true;
                 }
             }
-            return new JsonResult { Data = new { status = status } };
+            return RedirectToAction("Main");
         }
     }
 }

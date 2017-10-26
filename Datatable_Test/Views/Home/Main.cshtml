@@ -33,19 +33,22 @@
     <script src="~/Scripts/jquery.validate.min.js"></script>
     <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
     <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="~/Scripts/bootstrap-notify.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>    
     <script>
+
         $(document).ready(function () {
+            
             var someTable = $('#myDataTable').DataTable({
                 "ajax": {
                     "url" : '/home/GetEmployees',
                     "type": "GET",
-                    "datatype":"json"
+                    "datatype": "json"
                 },
                 "columns": [
                     { "data": "Num_Empleado", "autoWidth": true },
                     { "data": "Nombre", "autoWidth": true },
-                    { "data": "Fecha_Creacion", "autoWidth": true },
+                    { "data": "Fecha_Creacion", "autoWidth": true, },
                     {
                         "data": "Num_Empleado", "width": "50px", "render": function (data) {
                             return '<a class="popup" href="/home/save/' + data + '">Edit</a>';
@@ -58,11 +61,15 @@
                     }
                 ]
             });
+            //var flag = false;
+            //someTable.ajax.reload();            
             $('.tablecontainer').on('click', 'a.popup', function (e) {
                 e.preventDefault();
                 OpenPopup($(this).attr('href'));
-            })
+            });
+
             function OpenPopup(pageUrl) {
+                flag = true;
                 var $pageContent = $('<div/>');
                 $pageContent.load(pageUrl, function () {
                     $('#popupForm', $pageContent).removeData('validator');
@@ -80,11 +87,13 @@
                     title: 'Popup Dialog',
                     height: 550,
                     width: 600,
-                    close : function () {
-                        $dialog.dialog('destroy').remove();
+                    close: function () {                       
+                        $dialog.dialog('destroy').remove();                        
                     }
-                });
+                    });
+                
                 $('.popupWindow').on('submit', '#popupForm', function (e) {
+                    var notify = $.notify('<strong>Success!</strong>', { allow_dismiss: false, type: 'success' });
                     var url = $('#popupForm')[0].action;
                     $.ajax({
                         type: 'POST',
@@ -92,16 +101,22 @@
                         data: $('#popupForm').serialize(),
                         success: function (data) {
                             if(data.status){
-                                $dialog.dialog('close');
-                                someTable.ajax.reload();
-                            }
+                                $dialog.dialog('close');                                
+                                someTable.ajax.reload();                                
+                                //$(document).reload();
+                            }                            
                         }
                     });
-                    e.preventDefault();
-                })
-
+                    e.preventDefault();                    
+                    //e.reload();
+                    
+                })                                
                 $dialog.dialog('open');
+                
             }
+            $(window).bind('beforeunload', function () {
+                var notify = $.notify('<strong>Success!</strong>', { allow_dismiss: false, type: 'success' });
+            })
         });
     </script>
 </body>

@@ -154,6 +154,8 @@
       <LastGenOutput>Empleado.cs</LastGenOutput>
     </Content>
     <None Include="Scripts\jquery-3.2.1.intellisense.js" />
+    <Content Include="Scripts\bootstrap-notify.js" />
+    <Content Include="Scripts\bootstrap-notify.min.js" />
     <Content Include="Scripts\jquery-3.2.1.js" />
     <Content Include="Scripts\jquery-3.2.1.min.js" />
     <Content Include="Scripts\jquery-3.2.1.slim.js" />
@@ -170,6 +172,7 @@
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Empleado.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
